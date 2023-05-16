@@ -256,7 +256,7 @@ ipcMain.handle('save-markdown', async (event, content) => {
     const options = {
         title: 'Save Markdown',
         filters: [
-            { name: 'Text Files', extensions: ['txt', 'docx'] },
+            { name: 'Text Files', extensions: ['txt'] },
             { name: 'Markdown Files', extensions: ['md', 'markdown'] }
             // { name: 'All Files', extensions: ['*'] }
         ]
