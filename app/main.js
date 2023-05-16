@@ -1,10 +1,127 @@
-const { app, BrowserWindow, dialog, Notification, ipcMain } = require('electron');
+const { app, BrowserWindow, dialog, Notification, ipcMain, Menu } = require('electron');
 const fs = require('fs');
 const { marked } = require('marked');
 const path = require('path');
 
 
 const windows = new Set();
+
+const isMac = process.platform === 'darwin'
+
+//====================   Menu Template===========================
+const template = [
+    // { role: 'appMenu' }
+    ...(isMac ? [{
+        label: app.name,
+        submenu: [
+            { role: 'about' },
+            { type: 'separator' },
+            { role: 'services' },
+            { type: 'separator' },
+            { role: 'hide' },
+            { role: 'hideOthers' },
+            { role: 'unhide' },
+            { type: 'separator' },
+            { role: 'quit' }
+        ]
+    }] : []),
+    // { role: 'fileMenu' }
+    {
+        label: 'App',
+        submenu: [
+            isMac ? { label: 'Quit All', role: 'close' } : { label: 'Quit All', role: 'quit' }, {
+                label: 'Quit Window', click: () => { BrowserWindow.getFocusedWindow().close(); }
+
+            }
+        ]
+    },
+    // { role: 'editMenu' }
+    // {
+    //     label: 'Edit',
+    //     submenu: [
+    //         { role: 'undo' },
+    //         { role: 'redo' },
+    //         { type: 'separator' },
+    //         { role: 'cut' },
+    //         { role: 'copy' },
+    //         { role: 'paste' },
+    //         ...(isMac ? [
+    //             { role: 'pasteAndMatchStyle' },
+    //             { role: 'delete' },
+    //             { role: 'selectAll' },
+    //             { type: 'separator' },
+    //             {
+    //                 label: 'Speech',
+    //                 submenu: [
+    //                     { role: 'startSpeaking' },
+    //                     { role: 'stopSpeaking' }
+    //                 ]
+    //             }
+    //         ] : [
+    //             { role: 'delete' },
+    //             { type: 'separator' },
+    //             { role: 'selectAll' }
+    //         ])
+    //     ]
+    // },
+    // { role: 'viewMenu' }
+    // {
+    //     label: 'View',
+    //     submenu: [
+    //         { role: 'reload' },
+    //         { role: 'forceReload' },
+    //         { role: 'toggleDevTools' },
+    //         { type: 'separator' },
+    //         { role: 'resetZoom' },
+    //         { role: 'zoomIn' },
+    //         { role: 'zoomOut' },
+    //         { type: 'separator' },
+    //         { role: 'togglefullscreen' }
+    //     ]
+    // },
+    // { role: 'windowMenu' }
+    // {
+    //     label: 'Window',
+    //     submenu: [
+    //         { role: 'minimize' },
+    //         { role: 'zoom' },
+    //         ...(isMac ? [
+    //             { type: 'separator' },
+    //             { role: 'front' },
+    //             { type: 'separator' },
+    //             { role: 'window' }
+    //         ] : [
+    //             { role: 'close' }
+    //         ])
+    //     ]
+    // },
+    {
+        role: 'help',
+        submenu: [
+            {
+                label: 'View Project On GitHub',
+                click: async () => {
+                    const { shell } = require('electron')
+                    await shell.openExternal('https://github.com/CodeLikeAyush/Mark-Down-Editor')
+                }
+            },
+            {
+                label: 'My Portfolio',
+                click: async () => {
+                    const { shell } = require('electron')
+                    await shell.openExternal('https://codelikeayush.github.io/Ayush-Portfolio/')
+                }
+            }
+        ]
+    },
+
+]
+
+const menu = Menu.buildFromTemplate(template)
+Menu.setApplicationMenu(menu)
+//=======================================================================
+
+
 
 app.on('ready', () => {
     createWindow();
@@ -90,6 +207,7 @@ const renderMarkdownToHtml = (markdown) => {
 ipcMain.handle('open-local-file', async (event) => {
 
     const options = {
+        title: 'Open File',
         properties: ['openFile'],
         filters: [
             { name: 'Text Files', extensions: ['txt'] },
@@ -116,7 +234,7 @@ ipcMain.handle('open-local-file', async (event) => {
 ipcMain.handle('prompt-unsaved', async (event) => {
     const options = {
         type: 'question',
-        buttons: ['Cancel', 'Yes, please', 'No, thanks'],
+        buttons: ['Cancel', 'Yes, save', `No, don't save`],
         defaultId: 0,
         title: 'Unsaved Changes*',
         message: 'Save changes?',
@@ -167,3 +285,6 @@ ipcMain.on('new-window', (event) => {
 function showNotification(NOTIFICATION_TITLE, NOTIFICATION_BODY) {
     new Notification({ title: NOTIFICATION_TITLE, body: NOTIFICATION_BODY }).show()
 }
+
+// function to open recent files:
+

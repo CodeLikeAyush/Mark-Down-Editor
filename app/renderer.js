@@ -27,30 +27,28 @@ markdownView.addEventListener('keyup', async (event) => {
 openFileButton.addEventListener('click', async (event) => {
     let content = document.querySelector('#markdown').value;
     if (content) {
-        const userResponse = await window.electronAPI.promptUnsaved();
-        console.log(userResponse)
-        if (userResponse == 0) {
+        const userChoice = await window.electronAPI.promptUnsaved();
+        // console.log(userChoice)
+        if (userChoice == 0) {// canceled
             return;
         }
-        else if (userResponse == 1) {
+        else if (userChoice == 1) {// save
             window.electronAPI.saveMarkdown(document.querySelector('#markdown').value);
 
         }
-        else if (userResponse == 2) {
-
+        else if (userChoice == 2) {// don't save
             openLocalFile()
         }
 
     }
     else {
-        // console.log("inside if")
         openLocalFile()
     }
 
 })
 
 const openLocalFile = async () => {
-    let localFileContent;
+
     try {
         let { localFilePath, fileContent } = await window.electronAPI.openLocalFile();
 
@@ -58,8 +56,8 @@ const openLocalFile = async () => {
             filePath = localFilePath;
             originalContent = fileContent;
 
-            markdownView.innerText = fileContent;
             // console.log(fileContent)
+            document.querySelector('#markdown').value = fileContent;
             const htmlText = await window.electronAPI.markdownToHTML(fileContent);
             htmlView.innerHTML = htmlText;
             // console.log(localFilePath, fileContent)
@@ -78,5 +76,4 @@ newWindowButton.addEventListener('click', async () => {
 
 saveMarkdownButton.addEventListener('click', () => {
     window.electronAPI.saveMarkdown(document.querySelector('#markdown').value);
-    // console.log(a)
 })
