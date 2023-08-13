@@ -5,10 +5,10 @@ const htmlView = document.querySelector('#html');
 const newWindowButton = document.querySelector('#new-file');
 const openFileButton = document.querySelector('#open-file');
 const saveMarkdownButton = document.querySelector('#save-markdown');
-const revertButton = document.querySelector('#revert');
-const saveHtmlButton = document.querySelector('#save-html');
-const showFileButton = document.querySelector('#show-file');
-const openInDefaultButton = document.querySelector('#open-in-default');
+// const revertButton = document.querySelector('#revert');
+// const saveHtmlButton = document.querySelector('#save-html');
+// const showFileButton = document.querySelector('#show-file');
+// const openInDefaultButton = document.querySelector('#open-in-default');
 
 
 let filePath = null;

@@ -1,9 +1,9 @@
 const { contextBridge, ipcRenderer, ipcMain } = require('electron')
 
 contextBridge.exposeInMainWorld('electronAPI', {
-    node: () => process.versions.node,
-    chrome: () => process.versions.chrome,
-    electron: () => process.versions.electron,
+    // node: () => process.versions.node,
+    // chrome: () => process.versions.chrome,
+    // electron: () => process.versions.electron,
     // createFile: (fileName) => ipcRenderer.send('create-file', fileName),
     newWindow: () => { ipcRenderer.send('new-window') },
     markdownToHTML: (markdownContent) => ipcRenderer.invoke('mark-down-to-HTML', markdownContent),

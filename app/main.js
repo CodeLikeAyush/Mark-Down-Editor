@@ -202,6 +202,24 @@ const renderMarkdownToHtml = (markdown) => {
 
 };
 
+// listen for 'prompt-unsaved' call:
+ipcMain.handle('prompt-unsaved', async (event) => {
+    const options = {
+        type: 'question',
+        buttons: ['Cancel', 'Yes, save', `No, don't save`],
+        defaultId: 0,
+        title: 'Unsaved Changes*',
+        message: 'Save changes?',
+        detail: 'Markdown you edited is not saved',
+        // checkboxLabel: 'Remember my choice',
+        // checkboxChecked: true,
+    };
+
+    const { response, checkboxChecked } = await dialog.showMessageBox(BrowserWindow.getFocusedWindow(), options);
+    console.log(response);
+    return response
+
+})
 
 // listen for 'open-local-file' call:
 ipcMain.handle('open-local-file', async (event) => {
@@ -230,23 +248,10 @@ ipcMain.handle('open-local-file', async (event) => {
 
 })
 
-// listen for 'prompt-unsaved' call:
-ipcMain.handle('prompt-unsaved', async (event) => {
-    const options = {
-        type: 'question',
-        buttons: ['Cancel', 'Yes, save', `No, don't save`],
-        defaultId: 0,
-        title: 'Unsaved Changes*',
-        message: 'Save changes?',
-        detail: 'Markdown you edited is not saved',
-        // checkboxLabel: 'Remember my choice',
-        // checkboxChecked: true,
-    };
 
-    const { response, checkboxChecked } = await dialog.showMessageBox(BrowserWindow.getFocusedWindow(), options);
-    console.log(response);
-    return response
-
+// listen for 'new-window' call :
+ipcMain.on('new-window', (event) => {
+    createWindow();
 })
 
 
@@ -275,16 +280,9 @@ ipcMain.handle('save-markdown', async (event, content) => {
 
 
 
-// listen for 'new-window' call :
-ipcMain.on('new-window', (event) => {
-    createWindow();
-})
-
-
 // function for notification:
 function showNotification(NOTIFICATION_TITLE, NOTIFICATION_BODY) {
     new Notification({ title: NOTIFICATION_TITLE, body: NOTIFICATION_BODY }).show()
 }
 
-// function to open recent files:
 

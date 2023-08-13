@@ -1,16 +1,26 @@
 {
   "name": "markdown-editor",
   "version": "1.0.0",
-  "description": "",
+  "description": "Markdown Text Editor",
   "main": "./app/main.js",
   "scripts": {
-    "start": "electron .",
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Ayush Raj",
   "license": "ISC",
   "dependencies": {
-    "electron": "^22.0.0",
+    "electron-squirrel-startup": "^1.0.0",
     "marked": "^4.2.4"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^6.1.1",
+    "@electron-forge/maker-deb": "^6.1.1",
+    "@electron-forge/maker-rpm": "^6.1.1",
+    "@electron-forge/maker-squirrel": "^6.1.1",
+    "@electron-forge/maker-zip": "^6.1.1",
+    "electron": "^22.3.9"
   }
 }
